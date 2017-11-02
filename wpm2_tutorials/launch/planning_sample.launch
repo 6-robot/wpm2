@@ -1,0 +1,7 @@
+<launch>
+
+  <include file="$(find wpm2_bringup)/launch/planning.launch"/>
+
+  <node name="wpm2_planning" pkg="wpm2_tutorials" type="wpm2_planning" output="screen"/>
+
+</launch>

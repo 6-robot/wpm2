@@ -1,0 +1,18 @@
+controller_list:
+  - name: wpm2_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - joint1_joint2
+      - joint2_joint3
+      - joint3_joint4
+      - joint4_joint5
+      - joint5_joint6
+      - joint6_palm
+  - name: wpm2_gripper_controller
+    action_ns: gripper_command
+    type: GripperCommand
+    default: true
+    joints:
+      - wpm2_palm_finger

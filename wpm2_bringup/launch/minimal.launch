@@ -1,0 +1,5 @@
+<launch>
+
+  <node name="wpm2_core" pkg="wpm2_bringup" type="wpm2_core" output="screen"/>
+
+</launch>

@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: wpm2_bringup
+    relative_path: urdf/wpm2_moveit.urdf
+  SRDF:
+    relative_path: config/WPM-2.srdf
+  CONFIG:
+    author_name: ZhangWanjie
+    author_email: zhangwanjie@6-robot.com
+    generated_timestamp: 1509004216
