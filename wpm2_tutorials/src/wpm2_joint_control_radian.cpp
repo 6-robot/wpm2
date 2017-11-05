@@ -40,10 +40,10 @@
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "wpm2_joint_control_degree");
+    ros::init(argc, argv, "wpm2_joint_control_radian");
 
     ros::NodeHandle n;
-    ros::Publisher joint_ctrl_pub = n.advertise<sensor_msgs::JointState>("wpm2/joint_ctrl_degree", 30);
+    ros::Publisher joint_ctrl_pub = n.advertise<sensor_msgs::JointState>("wpm2/joint_ctrl_radian", 30);
 
     //控制变量
     sensor_msgs::JointState ctrl_msg;
@@ -69,12 +69,11 @@ int main(int argc, char** argv)
 
     int nCount = 0;
     ros::Rate r(0.2);  //频率0.2Hz,5秒一个周期
-    ros::spinOnce();
-    r.sleep();
+   // r.sleep();
     
     while(ros::ok())
     {
-        ROS_INFO("[wpm2_joint_ctrl_degree] nCount = %d", nCount);
+        ROS_INFO("[wpm2_joint_ctrl_radian] nCount = %d", nCount);
         switch(nCount)
         {
         case 0:
@@ -87,7 +86,7 @@ int main(int argc, char** argv)
             ctrl_msg.position[7] = 35000; //手爪闭合
             break;
         case 1:
-            ctrl_msg.position[0] = 90;
+            ctrl_msg.position[0] = 1.57;
             ctrl_msg.position[1] = 0;
             ctrl_msg.position[2] = 0;
             ctrl_msg.position[3] = 0;
@@ -96,34 +95,34 @@ int main(int argc, char** argv)
             ctrl_msg.position[6] = 35000; //手爪闭合
             break;
         case 2:
-            ctrl_msg.position[0] = 90;
-            ctrl_msg.position[1] = 5;
-            ctrl_msg.position[2] = -90;
-            ctrl_msg.position[3] = -5;
-            ctrl_msg.position[4] = 90;
-            ctrl_msg.position[5] = 10;
+            ctrl_msg.position[0] = 1.57;
+            ctrl_msg.position[1] = 0.05;
+            ctrl_msg.position[2] = -1.57;
+            ctrl_msg.position[3] = -0.05;
+            ctrl_msg.position[4] = 1.57;
+            ctrl_msg.position[5] = 0.17;
             ctrl_msg.position[6] = 35000; //手爪闭合
             break;
         case 3:
-            ctrl_msg.position[0] = 90;
-            ctrl_msg.position[1] = 5;
-            ctrl_msg.position[2] = -90;
-            ctrl_msg.position[3] = -5;
-            ctrl_msg.position[4] = 90;
-            ctrl_msg.position[5] = 10;
+            ctrl_msg.position[0] = 1.57;
+            ctrl_msg.position[1] = 0.05;
+            ctrl_msg.position[2] = -1.57;
+            ctrl_msg.position[3] = -0.05;
+            ctrl_msg.position[4] = 1.57;
+            ctrl_msg.position[5] = 0.17;
             ctrl_msg.position[6] = 10000; //手爪张开
             break;
         case 4:
-            ctrl_msg.position[0] = 90;
-            ctrl_msg.position[1] = 5;
-            ctrl_msg.position[2] = -90;
-            ctrl_msg.position[3] = -5;
-            ctrl_msg.position[4] = 90;
-            ctrl_msg.position[5] = 10;
+            ctrl_msg.position[0] = 1.57;
+            ctrl_msg.position[1] = 0.05;
+            ctrl_msg.position[2] = -1.57;
+            ctrl_msg.position[3] = -0.05;
+            ctrl_msg.position[4] = 1.57;
+            ctrl_msg.position[5] = 0.17;
             ctrl_msg.position[6] = 35000; //手爪闭合
             break;
         case 5:
-            ctrl_msg.position[0] = 90;
+            ctrl_msg.position[0] = 1.57;
             ctrl_msg.position[1] = 0;
             ctrl_msg.position[2] = 0;
             ctrl_msg.position[3] = 0;
@@ -136,7 +135,7 @@ int main(int argc, char** argv)
         ros::spinOnce();
         r.sleep();
         nCount ++;
-        if(nCount >5)
+        if(nCount > 5)
         {
             nCount = 0;
         }

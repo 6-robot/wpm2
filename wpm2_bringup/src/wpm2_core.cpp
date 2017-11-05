@@ -332,12 +332,34 @@ void JointCtrlDegreeCallback(const sensor_msgs::JointState::ConstPtr& msg)
     wpm2.SetJoints(pos_send,vel_send);
 }
 
+//弧度控制机械臂
+void JointCtrlRadianCallback(const sensor_msgs::JointState::ConstPtr& msg)
+{
+    bExecPath = false;
+    int nNumJoint = msg->position.size();
+    if(nNumJoint > 7)
+    {
+        nNumJoint = 7;
+    }
+    for(int i=0;i<nNumJoint;i++)
+    {
+        if(i != 6)
+        pos_send[i] = msg->position[i] * fAngToDeg;
+        else
+        pos_send[i] = msg->position[i]; //手爪
+        vel_send[i] = msg->velocity[i];
+        ROS_INFO("[JointCtrlRadianCallback] %d - %s = %.2f (%.0f Deg)", i, msg->name[i].c_str(),msg->position[i],pos_send[i]);
+    }
+    wpm2.SetJoints(pos_send,vel_send);
+}
+
 int main(int argc, char** argv)
 {
     ros::init(argc,argv,"wpm2_core");
     ros::NodeHandle n;
 
-    ros::Subscriber joint_ctrl_sub = n.subscribe("/wpm2/joint_ctrl_degree",30,&JointCtrlDegreeCallback);
+    ros::Subscriber joint_ctrl_degree_sub = n.subscribe("/wpm2/joint_ctrl_degree",30,&JointCtrlDegreeCallback);
+    ros::Subscriber joint_ctrl_radian_sub = n.subscribe("/wpm2/joint_ctrl_radian",30,&JointCtrlRadianCallback);
     
 	TrajectoryServer tserver(n, "wpm2_controller/follow_joint_trajectory", boost::bind(&executeTrajectory, _1, &tserver), false);
   	ROS_INFO("TrajectoryActionServer: Starting");

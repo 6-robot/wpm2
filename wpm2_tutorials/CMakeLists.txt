@@ -229,6 +229,14 @@ target_link_libraries(wpm2_joint_control_degree
   ${catkin_LIBRARIES}
 )
 
+add_executable(wpm2_joint_control_radian
+  src/wpm2_joint_control_radian.cpp
+)
+add_dependencies(wpm2_joint_control_radian ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(wpm2_joint_control_radian
+  ${catkin_LIBRARIES}
+)
+
 add_executable(wpm2_planning
   src/wpm2_planning.cpp
 )
