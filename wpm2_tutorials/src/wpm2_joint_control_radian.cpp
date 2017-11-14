@@ -69,7 +69,6 @@ int main(int argc, char** argv)
 
     int nCount = 0;
     ros::Rate r(0.2);  //频率0.2Hz,5秒一个周期
-   // r.sleep();
     
     while(ros::ok())
     {
@@ -83,7 +82,7 @@ int main(int argc, char** argv)
             ctrl_msg.position[3] = 0;
             ctrl_msg.position[4] = 0;
             ctrl_msg.position[5] = 0;
-            ctrl_msg.position[7] = 35000; //手爪闭合
+            ctrl_msg.position[6] = 35000; //手爪闭合
             break;
         case 1:
             ctrl_msg.position[0] = 1.57;

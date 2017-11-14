@@ -28,10 +28,6 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(cmake_modules REQUIRED)
 find_package(Eigen REQUIRED)
 include_directories(
-  include ${catkin_INCLUDE_DIRS}
-  include ${catkin_INCLUDE_DIRS}
-  include ${catkin_INCLUDE_DIRS}
-  include ${catkin_INCLUDE_DIRS}
   include ${catkin_INCLUDE_DIRS}SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
