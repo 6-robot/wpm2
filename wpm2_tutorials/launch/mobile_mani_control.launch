@@ -1,0 +1,14 @@
+<launch>
+
+  <!-- WPM2 Core-->
+  <node name="wpm2_core" pkg="wpm2_bringup" type="wpm2_core" output="screen">
+      <param name="serial_port" type="string" value="/dev/wpv4_mani"/> 
+  </node>
+
+  <!-- WPV4 Base IMU-->
+  <include file="$(find wpv4_bringup)/launch/base_imu.launch"/>
+
+  <!-- mobile_mani_control -->
+  <node name="mobile_mani_control" pkg="wpm2_tutorials" type="mobile_mani_control" output="screen"/>
+
+</launch>

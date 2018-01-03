@@ -62,7 +62,6 @@ typedef struct
 }stGripperPos;
 static vector<stGripperPos> arGripperPos;
 
-
 static CWPM2_Driver wpm2;
 static double fDegToAng = 3.1415926/180;
 static double fAngToDeg = 180/3.1415926;

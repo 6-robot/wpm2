@@ -272,3 +272,19 @@ add_dependencies(scene_add_collision_obj ${${PROJECT_NAME}_EXPORTED_TARGETS} ${c
 target_link_libraries(scene_add_collision_obj
   ${catkin_LIBRARIES}
 )
+
+add_executable(mobile_mani_control
+  src/mobile_mani_control.cpp
+)
+add_dependencies(mobile_mani_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(mobile_mani_control
+  ${catkin_LIBRARIES}
+)
+
+add_executable(mobile_mani_plan_exec
+  src/mobile_mani_plan_exec.cpp
+)
+add_dependencies(mobile_mani_plan_exec ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(mobile_mani_plan_exec
+  ${catkin_LIBRARIES}
+)
