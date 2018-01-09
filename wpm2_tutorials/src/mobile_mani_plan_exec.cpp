@@ -38,6 +38,9 @@
 #include <moveit/move_group_interface/move_group.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <geometry_msgs/Twist.h>
+#include <actionlib/client/simple_action_client.h>
+#include <actionlib/client/terminal_state.h>
+#include <control_msgs/GripperCommandAction.h>
 
 static tf::StampedTransform transform;
 
@@ -47,11 +50,15 @@ int main(int argc, char **argv)
 
     ros::NodeHandle node_handle; 
     ros::Publisher vel_pub = node_handle.advertise<geometry_msgs::Twist>("/cmd_vel", 30);
+    actionlib::SimpleActionClient<control_msgs::GripperCommandAction> acGripper("wpm2_gripper_controller/gripper_command", true);
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
     printf("[mobile_plan_execute] 延迟2秒,等待核心节点启动... \n");
     sleep(2.0);
+
+    // 等待WPM2的手爪服务启动
+    acGripper.waitForServer();
 
     // 底盘运动速度
     geometry_msgs::Twist vel_cmd;
@@ -106,6 +113,27 @@ int main(int argc, char **argv)
     else
     {
         printf("[mobile_plan_execute] 轨迹规划失败,请检查规划目标的参数 \n");
+    }
+
+    // 控制手爪运动
+    control_msgs::GripperCommandGoal gripperCmd;
+    // 手指间距,单位为米(参数0.05表示指令要求手爪闭合到指间距5厘米)
+    gripperCmd.command.position = 0.05;
+    acGripper.sendGoal(gripperCmd);
+
+    // 等待指令执行结果,如果超过10秒(见参数10.0)则认为任务失败
+    bool finished_before_timeout = acGripper.waitForResult(ros::Duration(10.0));
+
+    if (finished_before_timeout)
+    {
+        // 手爪任务执行成功,显示执行结果
+        actionlib::SimpleClientGoalState state = acGripper.getState();
+        ROS_INFO("Action finished: %s",state.toString().c_str());
+    }
+    else
+    {
+        // 手爪任务执行失败
+        ROS_INFO("Action did not finish before the time out.");
     }
   
     ros::shutdown(); 
