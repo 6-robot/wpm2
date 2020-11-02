@@ -35,8 +35,10 @@
  @author     ZhangWanjie
  ********************************************************************/
 
-#include <moveit/move_group_interface/move_group.h>
+#include <tf/transform_broadcaster.h>
+#include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
 
 static tf::StampedTransform transform;
 
@@ -52,7 +54,7 @@ int main(int argc, char **argv)
     sleep(5.0);
 
     printf("[wpm2_planning] 准备进行轨迹规划... \n");
-    moveit::planning_interface::MoveGroup group("arm");
+    moveit::planning_interface::MoveGroupInterface group("arm");
 
     // 设置机械臂末端的目标位置
     geometry_msgs::Pose target_pose;
@@ -75,9 +77,9 @@ int main(int argc, char **argv)
     group.setPoseTarget(target_pose);
 
     // 进行运动规划，只是计算出轨迹，还不会控制机械臂实际运动
-    moveit::planning_interface::MoveGroup::Plan my_plan;
-    bool success = group.plan(my_plan);
-    if(success == true)
+    moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+    moveit::planning_interface::MoveItErrorCode success = group.plan(my_plan);
+    if(success == moveit_msgs::MoveItErrorCodes::SUCCESS)
     {
         printf("[wpm2_planning] 轨迹规划成功! \n");
     }

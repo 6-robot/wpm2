@@ -36,7 +36,9 @@
  ********************************************************************/
  
 #include <ros/ros.h>
-#include <moveit/move_group_interface/move_group.h>
+#include <tf/transform_broadcaster.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
@@ -70,15 +72,15 @@ int main(int argc, char **argv)
     printf("[wpm2_pick_place] 等待手爪服务启动... \n");
     acGripper.waitForServer();
     printf("[wpm2_pick_place] 准备进行轨迹规划... \n");
-    moveit::planning_interface::MoveGroup group("arm");
+    moveit::planning_interface::MoveGroupInterface group("arm");
 
     // 设置机械臂末端的目标位置
     geometry_msgs::Pose target_pose;
     tf::Quaternion quat;
-    moveit::planning_interface::MoveGroup::Plan plan;
+    moveit::planning_interface::MoveGroupInterface::Plan plan;
     control_msgs::GripperCommandGoal gripperCmd;
     bool gripper_success = true;
-    bool plan_success = true;
+    moveit::planning_interface::MoveItErrorCode plan_success;
     bool exec_success = true;
 
     /********* 抓取阶段 *********/
@@ -95,7 +97,7 @@ int main(int argc, char **argv)
     group.setPoseTarget(target_pose);
 
     plan_success = group.plan(plan);
-    if(plan_success == true)
+    if(plan_success == moveit_msgs::MoveItErrorCodes::SUCCESS)
     {
         printf("[wpm2_pick_place] 轨迹规划成功! 开始执行! \n");
         // 机械臂按照规划的轨迹运动
