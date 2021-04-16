@@ -200,6 +200,17 @@ target_link_libraries(wpm2_core
   ${catkin_LIBRARIES}
 )
 
+
+add_executable(wpm2_fake
+  src/wpm2_fake.cpp
+  src/driver/SerialCom.cpp
+  src/driver/WPM2_Driver.cpp
+)
+add_dependencies(wpm2_fake ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(wpm2_fake
+  ${catkin_LIBRARIES}
+)
+
 add_executable(wpm2_test
   src/wpm2_test.cpp
   src/driver/SerialCom.cpp
