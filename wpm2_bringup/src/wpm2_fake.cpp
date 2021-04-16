@@ -64,6 +64,7 @@ static vector<stGripperPos> arGripperPos;
 
 static CWPM2_Driver wpm2;
 static float arFakeJointPos[7];
+static float arTargetJointPos[7];
 static double fDegToAng = 3.1415926/180;
 static double fAngToDeg = 180/3.1415926;
 static double pos_send[7];
@@ -332,7 +333,7 @@ void JointCtrlDegreeCallback(const sensor_msgs::JointState::ConstPtr& msg)
     // wpm2.SetJoints(pos_send,vel_send);
     for(int i=0;i<nNumJoint;i++)
     {
-        arFakeJointPos[i] =  msg->position[i];
+        arTargetJointPos[i] =  msg->position[i];
     }
 }
 
@@ -359,9 +360,9 @@ void JointCtrlRadianCallback(const sensor_msgs::JointState::ConstPtr& msg)
     {
         
         if(i != 6)
-            arFakeJointPos[i] =  msg->position[i] * fAngToDeg;
+            arTargetJointPos[i] =  msg->position[i] * fAngToDeg;
         else
-            arFakeJointPos[i] =  msg->position[i]; //手爪
+            arTargetJointPos[i] =  msg->position[i]; //手爪
     }
 }
 
@@ -382,9 +383,9 @@ int main(int argc, char** argv)
     gserver.start();
 
     ros::NodeHandle n_param("~");
-    std::string strSerialPort;
-    n_param.param<std::string>("serial_port", strSerialPort, "/dev/ftdi");
-    wpm2.Open(strSerialPort.c_str(),115200);
+    // std::string strSerialPort;
+    // n_param.param<std::string>("serial_port", strSerialPort, "/dev/ftdi");
+    // wpm2.Open(strSerialPort.c_str(),115200);
     n_param.param<bool>("exec_to_goal", bExecToGoal, true);
 
     ros::Publisher joint_state_pub = n.advertise<sensor_msgs::JointState>("/joint_states",100);
@@ -424,6 +425,26 @@ int main(int argc, char** argv)
     {
         // wpm2.ReadNewData();
         //ROS_INFO("[wpm2.nParseCount]= %d",wpm2.nParseCount);
+        float step = 1;
+        for(int i=0;i<6;i++)
+        {
+            if(arFakeJointPos[i] < arTargetJointPos[i])
+            {
+                arFakeJointPos[i] += step;
+            }
+             if(arFakeJointPos[i] > arTargetJointPos[i])
+            {
+                arFakeJointPos[i]  -= step;
+            }
+        }
+        if(arFakeJointPos[6] < arTargetJointPos[6])
+        {
+            arFakeJointPos[6] += step*200;
+        }
+            if(arFakeJointPos[6] > arTargetJointPos[6])
+        {
+            arFakeJointPos[6]  -= step*200;
+        }
         
         msg.header.stamp = ros::Time::now();
         msg.header.seq ++;
