@@ -27,6 +27,7 @@ find_package(catkin REQUIRED COMPONENTS
 # find_package(Boost REQUIRED COMPONENTS system)
 find_package(cmake_modules REQUIRED)
 find_package(Eigen REQUIRED)
+find_package(OpenCV REQUIRED) 
 include_directories(
   include ${catkin_INCLUDE_DIRS}SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
@@ -287,4 +288,13 @@ add_executable(mobile_mani_plan_exec
 add_dependencies(mobile_mani_plan_exec ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(mobile_mani_plan_exec
   ${catkin_LIBRARIES}
+)
+
+add_executable(wpm2_trackbars
+  src/wpm2_trackbars.cpp
+)
+add_dependencies(wpm2_trackbars ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(wpm2_trackbars
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
 )
