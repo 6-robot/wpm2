@@ -322,6 +322,7 @@ void JointCtrlDegreeCallback(const sensor_msgs::JointState::ConstPtr& msg)
     {
         nNumJoint = 7;
     }
+    ROS_INFO("----------------------------");
     for(int i=0;i<nNumJoint;i++)
     {
         pos_send[i] = msg->position[i];
@@ -340,6 +341,7 @@ void JointCtrlRadianCallback(const sensor_msgs::JointState::ConstPtr& msg)
     {
         nNumJoint = 7;
     }
+    ROS_INFO("----------------------------");
     for(int i=0;i<nNumJoint;i++)
     {
         if(i != 6)
