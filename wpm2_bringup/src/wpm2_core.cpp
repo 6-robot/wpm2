@@ -374,6 +374,7 @@ int main(int argc, char** argv)
     std::string strSerialPort;
     n_param.param<std::string>("serial_port", strSerialPort, "/dev/ftdi");
     wpm2.Open(strSerialPort.c_str(),115200);
+    ROS_WARN("WPM2_Port = %s",strSerialPort.c_str());
     n_param.param<bool>("exec_to_goal", bExecToGoal, true);
 
     ros::Publisher joint_state_pub = n.advertise<sensor_msgs::JointState>("/joint_states",100);

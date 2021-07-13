@@ -59,6 +59,7 @@ int main(int argc, char **argv)
     {
         joint_angle[i] = 180;
         ctrl_msg.position[i] = joint_angle[i];
+        ctrl_msg.velocity[i] = 1000;
     }
 
     ros::Rate loop_rate(10);
