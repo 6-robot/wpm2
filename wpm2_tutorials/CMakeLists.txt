@@ -21,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_ros_planning_interface
   pluginlib 
   geometric_shapes
+  dynamic_reconfigure
   )
 
 ## System dependencies are found with CMake's conventions
@@ -108,6 +109,10 @@ link_directories(${catkin_LIBRARY_DIRS})
 #   cfg/DynReconf1.cfg
 #   cfg/DynReconf2.cfg
 # )
+
+generate_dynamic_reconfigure_options(
+  cfg/JointDegree.cfg
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -297,4 +302,12 @@ add_dependencies(wpm2_trackbars ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXP
 target_link_libraries(wpm2_trackbars
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
+)
+
+add_executable(wpm2_joint_rcfg
+  src/wpm2_joint_rcfg.cpp
+)
+add_dependencies(wpm2_joint_rcfg ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_gencfg)
+target_link_libraries(wpm2_joint_rcfg
+  ${catkin_LIBRARIES}
 )
