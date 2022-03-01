@@ -83,7 +83,7 @@ bool poseArrived()
     bool bArrived = true;
     for(int i=0;i<6;i++)
     {
-        double fDegDiff = fabs(arPose[nExecIndex].position[i] - wpm2.nRecvJointPos[i]*0.01);
+        double fDegDiff = fabs(arPose[nExecIndex].position[i] - arFakeJointPos[i]);
         if(fDegDiff > 1)
         {
             bArrived = false;
@@ -97,7 +97,7 @@ void executeTrajectory(const control_msgs::FollowJointTrajectoryGoalConstPtr& go
 {
     arPose.clear();
     int nrOfPoints = goal->trajectory.points.size();
-    ROS_INFO("Trajectory with %d positions received \n", nrOfPoints);
+    ROS_INFO("接收到规划策略的 %d 个路径姿态 ", nrOfPoints);
     if(bExecToGoal == false)
     {
         nExecIndex = 0;
@@ -106,6 +106,7 @@ void executeTrajectory(const control_msgs::FollowJointTrajectoryGoalConstPtr& go
     {
         nExecIndex = nrOfPoints - 1;
     }
+    ROS_INFO("开始缓存接收到的 %d 个路径姿态 ", nrOfPoints);
     for(int i=0; i<nrOfPoints; i++)
     {
         int nPos =  goal->trajectory.points[i].positions.size();
@@ -146,11 +147,13 @@ void executeTrajectory(const control_msgs::FollowJointTrajectoryGoalConstPtr& go
         /////////////////////////////////////////////////
     }
     
+    ROS_INFO("开始执行 规划 ");
     bExecPath = true;
     
     ros::Rate r(30);
     while( bExecPath == true)
     {
+        ROS_INFO("正在执行第 %d 个路径姿态 / 总共 %d 个姿态 ",nExecIndex,nrOfPoints);
         if(poseArrived() == true)
         {
             nExecIndex ++;
@@ -159,7 +162,7 @@ void executeTrajectory(const control_msgs::FollowJointTrajectoryGoalConstPtr& go
         {
             // 执行完毕
             bExecPath = false;
-            ROS_INFO("ExecPath done!");
+            ROS_INFO("执行完毕!");
         }
         else
         {
@@ -199,8 +202,12 @@ void executeTrajectory(const control_msgs::FollowJointTrajectoryGoalConstPtr& go
                     vel_send[i] = tmpVel;
                 }
             }
-            
-            wpm2.SetJoints(pos_send,vel_send);
+            // 放到假目标姿态列
+            for(int i=0;i<6;i++)
+            {
+                arTargetJointPos[i] = pos_send[i];
+            }
+            // wpm2.SetJoints(pos_send,vel_send);
         }
 
         r.sleep();
@@ -368,6 +375,7 @@ void JointCtrlRadianCallback(const sensor_msgs::JointState::ConstPtr& msg)
 
 int main(int argc, char** argv)
 {
+    setlocale(LC_ALL,"");
     ros::init(argc,argv,"wpm2_fake");
     ros::NodeHandle n;
 
@@ -418,7 +426,7 @@ int main(int argc, char** argv)
         arFakeJointPos[i] = 0;
     }
     pos_send[6] = 25000;//手爪
-    wpm2.SetJoints(pos_send,vel_send);
+    // wpm2.SetJoints(pos_send,vel_send);
     int nCount = 0;
 
     while(n.ok())
@@ -426,6 +434,7 @@ int main(int argc, char** argv)
         // wpm2.ReadNewData();
         //ROS_INFO("[wpm2.nParseCount]= %d",wpm2.nParseCount);
         float step = 1;
+        // 关节运动快
         for(int i=0;i<6;i++)
         {
             if(arFakeJointPos[i] < arTargetJointPos[i])
@@ -437,6 +446,7 @@ int main(int argc, char** argv)
                 arFakeJointPos[i]  -= step;
             }
         }
+        // 手爪运动快
         if(arFakeJointPos[6] < arTargetJointPos[6])
         {
             arFakeJointPos[6] += step*200;
