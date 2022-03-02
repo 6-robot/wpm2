@@ -10,7 +10,7 @@
 
   <!-- Given the published joint states, publish tf for the robot links -->
   <node name="wpm2_core" pkg="wpm2_bringup" type="wpm2_core" output="screen"/>
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
   <!--
   By default, hide joint_state_publisher's GUI

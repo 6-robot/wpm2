@@ -153,7 +153,7 @@ void executeTrajectory(const control_msgs::FollowJointTrajectoryGoalConstPtr& go
     ros::Rate r(30);
     while( bExecPath == true)
     {
-        ROS_INFO("正在执行第 %d 个路径姿态 / 总共 %d 个姿态 ",nExecIndex,nrOfPoints);
+        // ROS_INFO("正在执行第 %d 个路径姿态 / 总共 %d 个姿态 ",nExecIndex,nrOfPoints);
         if(poseArrived() == true)
         {
             nExecIndex ++;

@@ -13,7 +13,7 @@
   <node name="wpm2_core" pkg="wpm2_bringup" type="wpm2_core" output="screen">
       <param name="serial_port" type="string" value="/dev/wpv4_mani"/> 
   </node>
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
   <!--
   By default, hide joint_state_publisher's GUI
